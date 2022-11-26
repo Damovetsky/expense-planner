@@ -14,7 +14,7 @@ class _NewTransactionState extends State<NewTransaction> {
   final _tittleController = TextEditingController();
   final _amountController = TextEditingController();
 
-  DateTime _selectedDate;
+  DateTime _selectedDate = DateTime.now();
 
   void _submitData() {
     if (_amountController.text.isEmpty) {
@@ -63,22 +63,27 @@ class _NewTransactionState extends State<NewTransaction> {
             TextField(
               decoration: InputDecoration(labelText: 'Title'),
               controller: _tittleController,
-              onSubmitted: (_) => _submitData(),
+              onSubmitted: (_) {
+                if (_selectedDate.day == DateTime.now().day) return;
+                return _submitData();
+              },
             ),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
               controller: _amountController,
               keyboardType: TextInputType.number,
-              onSubmitted: (_) => _submitData(),
+              onSubmitted: (_) {
+                if (_selectedDate.day == DateTime.now().day) return;
+                return _submitData();
+              },
             ),
             Container(
               height: 70,
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(_selectedDate == null
-                        ? 'No Date Chosen!'
-                        : 'Picked date: ${DateFormat.yMd().format(_selectedDate)}'),
+                    child: Text(
+                        'Transaction date: ${DateFormat.yMd().format(_selectedDate)}'),
                   ),
                   TextButton(
                     child: Text('Choose date',
